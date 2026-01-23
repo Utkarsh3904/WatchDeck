@@ -1,0 +1,16 @@
+{
+  "name": "watchdeck-clone",
+  "version": "1.0.0",
+  "description": "full fleged backend inspired by chai aur code youtube clone",
+  "keywords": [
+    "javascript",
+    "backend"
+  ],
+  "license": "ISC",
+  "author": "Utkarsh Srivastava",
+  "type": "module",
+  "main": "\t",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

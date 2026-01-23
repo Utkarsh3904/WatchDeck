@@ -1,0 +1,1 @@
+WatchDesk is a multimedia video sharing platform with full backend and frontend (mern) inspired by chai aur backend more of a youtube clone.
