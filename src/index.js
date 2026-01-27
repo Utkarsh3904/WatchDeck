@@ -21,7 +21,5 @@ connectDB()
 })
 .catch((err)=>{
     console.log("monogo DB connection failed", err);
-    
-
 })
 
