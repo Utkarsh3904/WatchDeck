@@ -5,6 +5,7 @@ const asyncHandler = (requestHandler)=>{
     }
 }
  export {asyncHandler}
+ 
 
  //asyncHandler is a higher order fn so it take fn as input also
  //const asyncHandler = (func) => async {() => {...}}
