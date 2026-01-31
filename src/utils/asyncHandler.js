@@ -4,8 +4,10 @@ const asyncHandler = (requestHandler)=>{
         Promise.resolve(requestHandler(req,res,next)).catch ((err)=>next(err))
     }
 }
- export {asyncHandler}
- 
+
+
+export {asyncHandler}
+
 
  //asyncHandler is a higher order fn so it take fn as input also
  //const asyncHandler = (func) => async {() => {...}}
