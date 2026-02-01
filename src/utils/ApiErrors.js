@@ -1,5 +1,5 @@
 class ApiErros {
-    constructors(statusCode, message="Something went Worng", errors=[], statck="" ){
+    constructors(statusCode, message="Something went Worng", errors=[], stack="" ){
 
         super( message )  //super used to overwrite message
         this.statuscode = statusCode
@@ -9,8 +9,8 @@ class ApiErros {
         this.errors= errors
  
         //can avoid this
-        if (statck){
-            this.statck = statck
+        if (stack){
+            this.stack = stack
         }else{
             Error.captureStackTrace(this, this.constructor)
         }
