@@ -2,43 +2,51 @@ import moongoose , {Schema} from 'moongoose'
 import jwt from "jsonwebtokens"
 import bcrypt from "bcrypt"
 
-const videoSchema = new Schema(
+const userSchema = new Schema(
     {
-        videoFile : {
-            type: String,   //cloudinary URL
-            required: true,
-        },
-        thumbnail : {
-            type: String,   //cloudinary URL
-            required: true,
-        },
-        title : {
-            type: String,   
-            required: true,
-        },
-        description : {
-            type: String,   
-            required: true,
-        },
-        duration : {
-            type: Number,    //Cloudinary URL (when data is stored it stores the time)
-            default : 0   
-            },
-        views : {
-            type: Number,
+        username: {
+            type: String,
             required : true,
+            unique : true,
+            lowercase :true,
+            trim : true,
+            index: true    //for to enable search on basis on this (optimizes search)
         },
-        isPublished : {
-            type: Boolean,
-            default : true
+        email: {
+            type: String,
+            required : true,
+            unique : true,
+            lowercase :true,
+            trim : true,
         },
-        owner : {
-            type: Schema.Types.ObjectId,
-            ref: "User"
+        username: {
+            type: String,
+            required : true,
+            trim : true,
+            index: true    //for to enable search on basis on this (optimizes search)
+        },
+        avatar:{
+            type: String,     //cloudinary URL
+            required: true,
+        },
+        coverImage :{
+            type: String,
+        },
+        watchHistory : [   //array
+            {
+                type: Schema.Types.ObjectId,
+                ref : "Video"
+            }
+        ],
+        password :{
+            type : String,
+            required: [true, 'Passwrd is required']   //just a message 
+        },
+        refreshToken: {
+            type : String
         }
-
-
-    },{ timestamps : true }
+    },
+    { timestamps : true }
 )
 
 userSchema.pre("save" , async function(next) {
@@ -82,4 +90,4 @@ userSchema.methods.generateAcessToken = function(){
     )
 }
 
-export const Video = moongoose.model("Video", videoSchema)
+export const User = moongoose.model("User", userSchema)
