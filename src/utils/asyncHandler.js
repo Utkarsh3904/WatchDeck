@@ -1,12 +1,16 @@
 
 const asyncHandler = (requestHandler)=>{
-    (req, res, next)=>{
-        Promise.resolve(requestHandler(req,res,next)).catch ((err)=>next(err))
+    return async (req, res, next)=>{
+        try {
+            return await Promise.resolve(requestHandler(req, res, next))
+        } catch (err) {
+            return next(err)
+        }
     }
 }
 
 
-export {asyncHandler}
+export default asyncHandler
 
 
  //asyncHandler is a higher order fn so it take fn as input also
