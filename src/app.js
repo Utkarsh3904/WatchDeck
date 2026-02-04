@@ -15,4 +15,11 @@ app.use(express.urlencoded({extended: true, limit :"16kb"}))
 app.use(express.static("public"))//public assets/folder that stores photos etc in local server
 app.use(cookieParser())
 
+//import routes
+import userRouter from "./routes/user.routes.js"
+
+// routes declaration
+
+app.use("/api/v1/users", userRouter);
+
 export {app}
