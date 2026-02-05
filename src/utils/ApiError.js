@@ -1,7 +1,7 @@
-class ApiErros {
+class ApiError {
     constructors(statusCode, message="Something went Worng", errors=[], stack="" ){
 
-        super( message )  //super used to overwrite message
+        // super( message )  //super used to overwrite message
         this.statuscode = statusCode
         this.data = null
         this.message = message
