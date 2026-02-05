@@ -2,7 +2,7 @@
 // It gets the file in local storage then with help of local path it stores it in servers(cloudinary server) and 
 // deletes the files form temporary storage
 
-import {v2} from "cloudinary"
+import {v2 as cloudinary} from "cloudinary"
 
     // Configuration
     cloudinary.config({ 
