@@ -20,6 +20,7 @@ const registerUser = asyncHandler( async (req,res) => {
     const {fullname, email, password, username } = req.body //extract data from req.body
     // console.log("email:" , email);
 
+
     // A chk to see sari fields present or not , some ye krega agr koi bhi field khali hoga tho ye true return krdega
     if([fullname, email, username, password].some((field) => field?.trim() === "")){
         throw new ApiError(409, "All fields are required")
@@ -36,14 +37,17 @@ const registerUser = asyncHandler( async (req,res) => {
     //multer gives req.files
      //we take [0] as it is first property of avatar from that we can get its path jo multer ne upload kiya hai.
      //instead ofthis we can get many more like .size .png etc n we can apply validations on the basis of thesess.
-    const avatarLocalPath = req.files?.avatar[0]?.path;   //avatar word here bcoz of "avatar" word in multer files
-        console.log(req.files);
-    
+     //avatar word here bcoz of "avatar" word in multer files
 
-    let coverImageLocalPath ;
-    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
-        coverImageLocalPath = req.files.coverImage[0].path
-    }
+     //this code is written by sir prev now 
+    // const avatarLocalPath = req.files?.avatar[0]?.path;  
+    // const coverImageLocalPath = req.files.coverImage[0].path
+        const avatarLocalPath = req.files?.avatar?.[0]?.path;
+
+        let coverImageLocalPath;
+        if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+            coverImageLocalPath = req.files.coverImage[0].path
+        }
 
     if( !avatarLocalPath ){ 
         throw new ApiError (400, "Avatar file is required" )
@@ -54,7 +58,7 @@ const registerUser = asyncHandler( async (req,res) => {
     const coverImage = await uploadOnCloudinary ( coverImageLocalPath )
 
     if( !avatar ){
-        throw new ApiError (400, "Avatar file is required" )
+        throw new ApiError (400, "Avatar upload on cloudinary failed" )
     }
 
     //DB me user creation

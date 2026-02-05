@@ -5,6 +5,13 @@ dotenv.config({
 path : './.env'
 })
 
+// ADD THESE DEBUG LINES
+console.log("=== ENV CHECK ===");
+console.log("Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME);
+console.log("API Key:", process.env.CLOUDINARY_API_KEY);
+console.log("API Secret:", process.env.CLOUDINARY_API_SECRET);
+console.log("=== END ENV CHECK ===");
+
 
 import connectDB from "./db/index.js"
 

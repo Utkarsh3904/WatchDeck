@@ -54,7 +54,7 @@ userSchema.pre("save" , async function(next) {
     if(!this.isModified("password") ) return next();
     //else if there is changes in pass encrypt again
     this.password = await bcrypt.hash(this.password, 10)  //10 is number of rounds it wither be 8 or like default
-    next()
+    // next()
 })
 
 //custom method : to chk/match that the stored pass is equal to the pass given by user in like login etc
