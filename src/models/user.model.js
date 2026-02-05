@@ -1,10 +1,10 @@
-import moongoose , {Schema} from 'moongoose'
-import jwt from "jsonwebtokens"
+import mongoose , {Schema} from 'mongoose'
+import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 
 const userSchema = new Schema(
     {
-        username: {
+        fullname: {
             type: String,
             required : true,
             unique : true,
@@ -53,7 +53,7 @@ userSchema.pre("save" , async function(next) {
     //if there is no change in password field skip
     if(!this.isModified("password") ) return next();
     //else if there is changes in pass encrypt again
-    this.password = bcrypt.hash(this.password, 10)  //10 is number of rounds it wither be 8 or like default
+    this.password = await bcrypt.hash(this.password, 10)  //10 is number of rounds it wither be 8 or like default
     next()
 })
 
@@ -69,7 +69,7 @@ userSchema.methods.generateAcessToken = function(){
             id: this._id,  //we get this id form mongoDB
             email: this.email,
             username: this.username,
-            fullName: this.fullname
+            fullname: this.fullname
          },
          process.env.ACCESS_TOKEN_SECRET,
          {
@@ -90,4 +90,4 @@ userSchema.methods.generateAcessToken = function(){
     )
 }
 
-export const User = moongoose.model("User", userSchema)
+export const User = mongoose.model("User", userSchema)
