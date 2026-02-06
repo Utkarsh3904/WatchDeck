@@ -49,13 +49,21 @@ const userSchema = new Schema(
     { timestamps : true }
 )
 
-userSchema.pre("save" , async function(next) {
-    //if there is no change in password field skip
-    if(!this.isModified("password") ) return next();
-    //else if there is changes in pass encrypt again
-    this.password = await bcrypt.hash(this.password, 10)  //10 is number of rounds it wither be 8 or like default
-    // next()
-})
+// userSchema.pre("save" , async function(next) {
+//     //if there is no change in password field skip
+//     if(!this.isModified("password") ) return next();
+//     //else if there is changes in pass encrypt again
+//     this.password = await bcrypt.hash(this.password, 10)  //10 is number of rounds it wither be 8 or like default
+//     next();
+// })
+userSchema.pre("save", async function(next) {
+    if (!this.isModified("password")) {
+        return next();
+    }
+    
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
 
 //custom method : to chk/match that the stored pass is equal to the pass given by user in like login etc
 
@@ -63,10 +71,10 @@ userSchema.methods.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password, this.password)
 }
 
-userSchema.methods.generateAcessToken = function(){
+userSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
-            id: this._id,  //we get this id form mongoDB
+            _id: this._id,  //we get this id form mongoDB
             email: this.email,
             username: this.username,
             fullname: this.fullname
@@ -78,10 +86,10 @@ userSchema.methods.generateAcessToken = function(){
     )
 }
 
-userSchema.methods.generateAcessToken = function(){
+userSchema.methods.generateRefreshToken = function(){
     return jwt.sign(
         {
-            id: this._id,  //we get this id from mongoDB
+            _id: this._id,  //we get this id from mongoDB
          },
          process.env.REFRESH_TOKEN_SECRET,
          {
