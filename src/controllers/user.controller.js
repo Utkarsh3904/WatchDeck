@@ -71,7 +71,7 @@ const registerUser = asyncHandler( async (req,res) => {
         username : username.toLowerCase()
     })
 
-    // ye vo hai jo humuser ko denge tho user ko password aur refreshtoken dene ki need nhi hai thi dene se phle hta denge
+    // ye vo hai jo hum user ko denge tho user ko password aur refreshtoken dene ki need nhi hai thi dene se phle hta denge
     const createdUser = await User.findById(user._id).select(
         "-password -refreshtoken"
     )
