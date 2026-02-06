@@ -262,7 +262,7 @@ const updateAccountDetails = asyncHandler(async(req, res) => {
         {
             $set: {
                 fullName,
-                email: email
+                email              //we can ase write it as (email: email)
             }
         },
         {new: true}
