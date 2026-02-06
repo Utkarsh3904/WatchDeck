@@ -6,20 +6,39 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
 
-const generateAccessAndRefereshTokens = async(userId) =>{
+const generateAccessAndRefreshTokens = async(userId) =>{
     try {
+        console.log("1. Finding user with ID:", userId);
         const user = await User.findById(userId)
+        
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+        
+        console.log("2. User found:", user.username);
+        console.log("3. Generating access token...");
         const accessToken = user.generateAccessToken()
+        console.log("4. Access token generated");
+        
+        console.log("5. Generating refresh token...");
         const refreshToken = user.generateRefreshToken()
+        console.log("6. Refresh token generated");
 
         user.refreshToken = refreshToken
-        await user.save({ validateBeforeSave: false })
+        console.log("7. Saving user...");
+        // await user.save({ validateBeforeSave: false })
+        await User.findByIdAndUpdate(
+            user._id,
+            { refreshToken: refreshToken },
+            { new: true }
+        )
+        console.log("8. User saved successfully");
 
         return {accessToken, refreshToken}
 
-
     } catch (error) {
-        throw new ApiError(500, "Something went wrong while generating referesh and access token")
+        console.error("FULL ERROR:", error); // This will show the real error
+        throw new ApiError(500, "Something went wrong while generating refresh and access token")
     }
 }
 
@@ -60,7 +79,7 @@ const registerUser = asyncHandler( async (req,res) => {
      //this code is written by sir prev now 
     // const avatarLocalPath = req.files?.avatar[0]?.path;  
     // const coverImageLocalPath = req.files.coverImage[0].path
-        const avatarLocalPath = req.files?.avatar?.[0]?.path;
+        const avatarLocalPath = req.files?.avatar[0]?.path;
 
         let coverImageLocalPath;
         if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
@@ -91,7 +110,7 @@ const registerUser = asyncHandler( async (req,res) => {
 
     // ye vo hai jo hum user ko denge tho user ko password aur refreshtoken dene ki need nhi hai thi dene se phle hta denge
     const createdUser = await User.findById(user._id).select(
-        "-password -refreshtoken"
+        "-password -refreshToken"
     )
 
     if( !createdUser ) {
@@ -138,7 +157,7 @@ const loginUser = asyncHandler(async (req, res) =>{
     throw new ApiError(401, "Invalid user credentials")
     }
 
-   const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(user._id)
+   const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id)
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
@@ -217,7 +236,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             secure: true
         }
     
-        const {accessToken, newRefreshToken} = await generateAccessAndRefereshTokens(user._id)
+        const {accessToken, newRefreshToken} = await generateAccessAndRefreshTokens(user._id)
     
         return res
         .status(200)
@@ -226,7 +245,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200, 
-                {accessToken, refreshToken: newRefreshToken},
+                {accessToken, newRefreshToken},
                 "Access token refreshed"
             )
         )
