@@ -59,7 +59,7 @@ userSchema.pre("save" , async function(next) {
 
 //custom method : to chk/match that the stored pass is equal to the pass given by user in like login etc
 
-userSchema.methods.isPassword = async function(password){
+userSchema.methods.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password, this.password)
 }
 
