@@ -9,7 +9,13 @@ const createPlaylist = asyncHandler(async (req, res) => {
     const {name, description} = req.body
 
     //TODO: create playlist
-    
+    const newPlaylist = await Playlist.create({
+        name, 
+        description,
+        owner: req.user._id 
+    })
+
+    return res.status(200).json(new ApiResponse(200, newPlaylist, "Playlist created successfully"))
 })
 
 const getUserPlaylists = asyncHandler(async (req, res) => {
